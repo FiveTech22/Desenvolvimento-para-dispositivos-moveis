@@ -24,9 +24,9 @@ class CreateObjectiveViewModel(application: Application) : AndroidViewModel(appl
         photo: Int?,
         date: String
     ) {
-        if (value == null || savedValue == null || description != "" || photo == null || date == "Data"){
+        if (value == null || savedValue == null || description.isBlank() || photo == null || date == "Data") {
             _isLoading.value = null
-        }else{
+        } else {
             repository.createObjective(
                 value = value!!,
                 savedValue = savedValue!!,
@@ -51,35 +51,42 @@ class CreateObjectiveViewModel(application: Application) : AndroidViewModel(appl
     }
 
     fun updateObjective(updatedObjective: ObjectiveModel, objective: ObjectiveModel) {
-        val updatedValue = updatedObjective.value.takeIf { it != objective.value }
-        val updatedSavedValue = updatedObjective.savedValue.takeIf { it != objective.savedValue }
-        val updatedDescription = updatedObjective.name.takeIf { it != objective.name }
-        val updatedPhoto = updatedObjective.photo.takeIf { it != objective.photo }
-        val updatedDate = updatedObjective.date.takeIf { it != objective.date }
 
-        repository.updateObjective(
-            id = objective.id!!,
-            model = ObjectiveModel(
-                value = updatedValue,
-                savedValue = updatedSavedValue,
-                name = updatedDescription,
-                photo = updatedPhoto,
-                date = updatedDate
-            ),
-            listener = object : ApiListener<ResponseModel> {
-                override fun onSuccess(result: ResponseModel) {
-                    if (result.status == HTTP_OK) {
-                        _isLoading.value = true
-                    } else {
+        if (updatedObjective.value == null || updatedObjective.savedValue == null ||
+            updatedObjective.name!!.isBlank() || updatedObjective.photo == null || updatedObjective.date == "Data"
+        ) {
+            _isLoading.value = null
+        } else {
+            val updatedValue = updatedObjective.value.takeIf { it != objective.value }
+            val updatedSavedValue = updatedObjective.savedValue.takeIf { it != objective.savedValue }
+            val updatedDescription = updatedObjective.name.takeIf { it != objective.name }
+            val updatedPhoto = updatedObjective.photo.takeIf { it != objective.photo }
+            val updatedDate = updatedObjective.date.takeIf { it != objective.date }
+
+            repository.updateObjective(
+                id = objective.id!!,
+                model = ObjectiveModel(
+                    value = updatedValue,
+                    savedValue = updatedSavedValue,
+                    name = updatedDescription,
+                    photo = updatedPhoto,
+                    date = updatedDate
+                ),
+                listener = object : ApiListener<ResponseModel> {
+                    override fun onSuccess(result: ResponseModel) {
+                        if (result.status == HTTP_OK) {
+                            _isLoading.value = true
+                        } else {
+                            _isLoading.value = false
+                        }
+                    }
+
+                    override fun onFailure(message: String?, code: Int) {
                         _isLoading.value = false
                     }
                 }
-
-                override fun onFailure(message: String?, code: Int) {
-                    _isLoading.value = false
-                }
-            }
-        )
+            )
+        }
     }
 
 }

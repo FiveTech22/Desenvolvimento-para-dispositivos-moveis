@@ -58,8 +58,8 @@ class CreateObjectiveActivity : AppCompatActivity() {
     }
 
     private fun handleSheet() {
-        val dialog = BottomSheetDialog(this,R.style.BottomSheetDialog)
-        sheetBinding = CustomBottomSheetErroGenericBinding.inflate(layoutInflater,)
+        val dialog = BottomSheetDialog(this)
+        sheetBinding = CustomBottomSheetErroGenericBinding.inflate(layoutInflater)
         dialog.setContentView(sheetBinding.root)
 
         sheetBinding.button.setOnClickListener {
@@ -111,8 +111,8 @@ class CreateObjectiveActivity : AppCompatActivity() {
     }
 
     private fun save() {
-        val value = binding.editBalanceObjective.text.toString().takeIf { it != "" }
-        val squared = binding.editSpared.text.toString().takeIf { it != "" }
+        val value = binding.editBalanceObjective.text.toString().takeIf { it != "" }?.toDoubleOrNull()
+        val squared = binding.editSpared.text.toString().takeIf { it != "" }?.toDoubleOrNull()
         val descripton = binding.textNameObjective.text.toString()
         val date = binding.textData.text.toString()
         val photo = selectedCardView
@@ -121,8 +121,8 @@ class CreateObjectiveActivity : AppCompatActivity() {
         if (objective != null) {
             viewModel.updateObjective(
                 updatedObjective = ObjectiveModel(
-                    value = value?.toDouble(),
-                    savedValue = squared?.toDouble(),
+                    value = value,
+                    savedValue = squared,
                     name = descripton,
                     date = date,
                     photo = photo
@@ -131,8 +131,8 @@ class CreateObjectiveActivity : AppCompatActivity() {
             )
         } else {
             viewModel.createObjective(
-                value = value?.toDouble(),
-                savedValue = squared?.toDouble(),
+                value = value,
+                savedValue = squared,
                 description = descripton,
                 date = date,
                 photo = photo

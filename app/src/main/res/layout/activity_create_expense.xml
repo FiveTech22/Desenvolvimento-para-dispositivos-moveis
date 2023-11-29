@@ -195,7 +195,7 @@
                             android:layout_alignTop="@id/image_fixed_income"
                             android:layout_marginStart="16dp"
                             android:layout_toEndOf="@id/image_fixed_income"
-                            android:text="@string/fixed_income"
+                            android:text="@string/fixed_expense"
                             android:thumb="@drawable/thumber"
                             app:track="@drawable/track_expense"
                             android:textColor="@color/gray_4"

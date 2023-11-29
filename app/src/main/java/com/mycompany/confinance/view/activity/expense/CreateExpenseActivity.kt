@@ -181,14 +181,14 @@ class CreateExpenseActivity : AppCompatActivity() {
 
 
     private fun save() {
-        val value = binding.editBalanceExpense.cleanDoubleValue
+        val value = binding.editBalanceExpense.cleanDoubleValue.toString().takeIf { it != "" }?.toDoubleOrNull()
         val description = binding.editTextDescription.text.toString()
         val date = binding.textData.text.toString()
         val fixed = binding.switchExpense.isChecked
         val repetition = binding.textRepetition.text.toString()
         val photo = selectedCardView
-        var recurrenceIntervals: Int
-        var recurrenceFrequency: String
+        var recurrenceIntervals: Int? = null
+        var recurrenceFrequency: String? = null
 
         if (expense != null) {
             if (repetition != "Repetições") {
@@ -215,25 +215,25 @@ class CreateExpenseActivity : AppCompatActivity() {
                 viewModel.updateExpense(
                     updateExpense = MovementUpdate(
                         description = null,
-                        value = value.toLong(),
-                        photo = selectedCardView,
-                        date = date,
-                        fixedIncome = null,
-                        recurrenceIntervals = recurrenceIntervals,
-                        recurrenceFrequency =  recurrenceFrequency
-                    ),
-                    expense = expense!!
-                )
-            }else{
-                viewModel.updateExpense(
-                    updateExpense = MovementUpdate(
-                        description = null,
-                        value = value.toLong(),
+                        value = value?.toLong(),
                         photo = selectedCardView,
                         date = date,
                         fixedIncome = fixed,
-                        recurrenceIntervals = null,
-                        recurrenceFrequency =  null
+                        recurrenceIntervals = recurrenceIntervals,
+                        recurrenceFrequency = recurrenceFrequency
+                    ),
+                    expense = expense!!
+                )
+            } else {
+                viewModel.updateExpense(
+                    updateExpense = MovementUpdate(
+                        description = description,
+                        value = value?.toLong(),
+                        photo = selectedCardView,
+                        date = date,
+                        fixedIncome = fixed,
+                        recurrenceIntervals = recurrenceIntervals,
+                        recurrenceFrequency = recurrenceFrequency
                     ),
                     expense = expense!!
                 )
@@ -241,7 +241,7 @@ class CreateExpenseActivity : AppCompatActivity() {
 
         } else {
             viewModel.createExpense(
-                value.toLong(),
+                value?.toLong(),
                 description = description,
                 data = date,
                 fixedIncome = fixed,
@@ -332,10 +332,11 @@ class CreateExpenseActivity : AppCompatActivity() {
             binding.editTextDescription.setText("${expense!!.description}")
             binding.textData.text = expense!!.date
 
-            if (expense?.fixedIncome == true) {
+            if (expense!!.fixedIncome == true) {
                 binding.switchExpense.isChecked = true
+                binding.textRepetition.text = "Repetições"
             } else {
-                val recurrenceFrequency = when (expense?.recurrenceFrequency) {
+                val recurrenceFrequency = when (expense!!.recurrenceFrequency) {
                     "weekly" -> {
                         "Semanal"
                     }
@@ -356,8 +357,6 @@ class CreateExpenseActivity : AppCompatActivity() {
                         null
                     }
                 }
-
-
                 binding.textRepetition.text = "${expense?.recurrenceIntervals}x $recurrenceFrequency "
             }
             when (expense?.photo) {

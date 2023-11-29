@@ -253,6 +253,7 @@
     <string name="emojis">Emojis</string>
     <string name="outher">Outros</string>
     <string name="one">1</string>
+    <string name="fixed_expense">Despesa Fixa</string>
 
     <string-array name="months">
         <item>Janeiro</item>

@@ -18,7 +18,7 @@ class CreateExpenseViewModel(private val application: Application) : AndroidView
     val isLoading: LiveData<Boolean> = _isLoading
 
     fun createExpense(
-        value: Long,
+        value: Long?,
         description: String,
         data: String?,
         fixedIncome: Boolean?,
@@ -30,7 +30,7 @@ class CreateExpenseViewModel(private val application: Application) : AndroidView
                 repository.createMovement(
                     context = application,
                     codeType = 2,
-                    value = value,
+                    value = value!!,
                     description = description,
                     fixedIncome = null,
                     data = data,
@@ -55,7 +55,7 @@ class CreateExpenseViewModel(private val application: Application) : AndroidView
                 repository.createMovement(
                     context = application,
                     codeType = 2,
-                    value = value,
+                    value = value!!,
                     description = description,
                     data = data,
                     fixedIncome = fixedIncome,

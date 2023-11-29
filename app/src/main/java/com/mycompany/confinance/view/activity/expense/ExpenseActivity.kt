@@ -176,7 +176,7 @@ class ExpenseActivity : AppCompatActivity() {
 
 
     private fun checkMonthAndYear() {
-        binding.arrowBack.setOnClickListener {
+        binding.arrowBack1.setOnClickListener {
             if (calendar.get(Calendar.MONTH) == Calendar.JANUARY) {
                 calendar.add(Calendar.YEAR, -1)
                 calendar.set(Calendar.MONTH, Calendar.DECEMBER)
