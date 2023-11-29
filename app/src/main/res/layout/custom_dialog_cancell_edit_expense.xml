@@ -16,7 +16,7 @@
                 android:id="@+id/img_delete"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
-                app:srcCompat="@drawable/ic_launcher_background"
+                app:srcCompat="@drawable/lapis_novo_cortado_ao_meio"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentStart="true"
                 android:layout_marginTop="26dp"

@@ -74,8 +74,8 @@ class UserProfileActivity : AppCompatActivity() {
             startActivity(Intent(this, MainActivity::class.java))
             finish()
         }
-        dialogInvalidation = build.setView(dialogBinding.root).create()
-        dialogInvalidation?.show()
+        dialogSucess = build.setView(dialogBinding.root).create()
+        dialogSucess?.show()
     }
 
     private fun handleDialogUnauthorized() {
@@ -185,6 +185,7 @@ class UserProfileActivity : AppCompatActivity() {
         val build = AlertDialog.Builder(this, R.style.ThemeCustomDialog)
         val bindingDialog = CustomDialogDeleteAccountBinding.inflate(LayoutInflater.from(this))
         bindingDialog.buttonYesDelete.setOnClickListener {
+            dialogExit?.dismiss()
             viewModel.deleteUser()
         }
         bindingDialog.buttonNo.setOnClickListener {

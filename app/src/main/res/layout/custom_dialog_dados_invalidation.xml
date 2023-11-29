@@ -21,7 +21,8 @@
                 android:layout_alignParentStart="true"
                 android:layout_marginTop="26dp"
                 android:layout_marginStart="75dp"
-                app:srcCompat="@drawable/ic_launcher_background"
+                app:srcCompat="@drawable/erro"
+                app:tint="@color/yellow"
         />
 
         <androidx.appcompat.widget.AppCompatTextView

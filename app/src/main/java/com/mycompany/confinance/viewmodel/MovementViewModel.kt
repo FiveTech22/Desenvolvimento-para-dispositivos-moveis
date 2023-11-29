@@ -42,7 +42,7 @@ class MovementViewModel(application: Application) : AndroidViewModel(application
     }
 
     fun getExpense(month: Int, year: Int) {
-        repository.getRevenue(month = month, year = year, listener = object : ApiListener<List<MovementModel>> {
+        repository.getExpense(month = month, year = year, listener = object : ApiListener<List<MovementModel>> {
             override fun onSuccess(result: List<MovementModel>) {
                 if (result.isNotEmpty()) {
                     _isLoading.value = false

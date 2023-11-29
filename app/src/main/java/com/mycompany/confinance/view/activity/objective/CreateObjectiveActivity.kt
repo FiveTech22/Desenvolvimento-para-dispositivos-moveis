@@ -10,8 +10,10 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.R.color
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mycompany.confinance.R
 import com.mycompany.confinance.databinding.ActivityCreateObjectiveBinding
+import com.mycompany.confinance.databinding.CustomBottomSheetErroGenericBinding
 import com.mycompany.confinance.databinding.CustomDialogCancellEditObjectiveBinding
 import com.mycompany.confinance.model.ObjectiveModel
 import com.mycompany.confinance.util.DatePickerFragment
@@ -26,6 +28,7 @@ class CreateObjectiveActivity : AppCompatActivity() {
     private var selectedCardView: Int? = null
     private var objective: ObjectiveModel? = null
     private var editDeleteEdit: AlertDialog? = null
+    private lateinit var sheetBinding: CustomBottomSheetErroGenericBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCreateObjectiveBinding.inflate(layoutInflater)
@@ -39,13 +42,31 @@ class CreateObjectiveActivity : AppCompatActivity() {
 
     private fun observe() {
         viewModel.isLoading.observe(this) {
-            if (it) {
-                startActivity(Intent(this, ObjectiveActivity::class.java))
-                finish()
-            } else {
-                Toast.makeText(this, "erro", Toast.LENGTH_SHORT).show()
+            when (it) {
+                true -> {
+                    startActivity(Intent(this, ObjectiveActivity::class.java))
+                    finish()
+                }
+                false -> {
+                    Toast.makeText(this, "erro", Toast.LENGTH_SHORT).show()
+                }
+                else -> {
+                    handleSheet()
+                }
             }
         }
+    }
+
+    private fun handleSheet() {
+        val dialog = BottomSheetDialog(this,R.style.BottomSheetDialog)
+        sheetBinding = CustomBottomSheetErroGenericBinding.inflate(layoutInflater,)
+        dialog.setContentView(sheetBinding.root)
+
+        sheetBinding.button.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 
     private fun handleClick() {
@@ -90,29 +111,28 @@ class CreateObjectiveActivity : AppCompatActivity() {
     }
 
     private fun save() {
-        val value = binding.editBalanceObjective.cleanDoubleValue
-        val squared = binding.editSpared.cleanDoubleValue
+        val value = binding.editBalanceObjective.text.toString().takeIf { it != "" }
+        val squared = binding.editSpared.text.toString().takeIf { it != "" }
         val descripton = binding.textNameObjective.text.toString()
         val date = binding.textData.text.toString()
         val photo = selectedCardView
-        val p = objective?.photo
 
 
         if (objective != null) {
             viewModel.updateObjective(
                 updatedObjective = ObjectiveModel(
-                    value = value,
-                    savedValue = squared,
+                    value = value?.toDouble(),
+                    savedValue = squared?.toDouble(),
                     name = descripton,
                     date = date,
-                    photo = p
+                    photo = photo
                 ),
                 objective = objective!!
             )
         } else {
             viewModel.createObjective(
-                value = value,
-                savedValue = squared,
+                value = value?.toDouble(),
+                savedValue = squared?.toDouble(),
                 description = descripton,
                 date = date,
                 photo = photo
@@ -265,34 +285,42 @@ class CreateObjectiveActivity : AppCompatActivity() {
             binding.textData.text = objective?.date
             when (objective?.photo) {
                 1 -> {
+                    selectedCardView = 1
                     binding.cardHealth1.setBackgroundResource(R.drawable.background_rounded_card_objective)
                 }
 
                 2 -> {
+                    selectedCardView = 2
                     binding.cardHouse.setBackgroundResource(R.drawable.background_rounded_card_objective)
                 }
 
                 3 -> {
+                    selectedCardView = 3
                     binding.cardCell.setBackgroundResource(R.drawable.background_rounded_card_objective)
                 }
 
                 4 -> {
+                    selectedCardView = 4
                     binding.cardMarketplace.setBackgroundResource(R.drawable.background_rounded_card_objective)
                 }
 
                 5 -> {
+                    selectedCardView = 5
                     binding.cardGift.setBackgroundResource(R.drawable.background_rounded_card_objective)
                 }
 
                 6 -> {
+                    selectedCardView = 6
                     binding.cardCar.setBackgroundResource(R.drawable.background_rounded_card_objective)
                 }
 
                 7 -> {
+                    selectedCardView = 7
                     binding.cardJob.setBackgroundResource(R.drawable.background_rounded_card_objective)
                 }
 
                 8 -> {
+                    selectedCardView = 8
                     binding.cardOuther2.setBackgroundResource(R.drawable.background_rounded_card_objective)
                 }
             }

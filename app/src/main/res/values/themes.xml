@@ -1,20 +1,20 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Base.Theme.Confinance" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="drawerArrowStyle">@style/MyDrawerArrowToggle</item>
 
     </style>
 
-    <style name="Theme.Confinance" parent="Base.Theme.Confinance" />
+    <style name="Theme.Confinance" parent="Base.Theme.Confinance"/>
 
     <style name="Theme.Confinance.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="Theme.Confinance.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="Theme.Confinance.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
-    <style name="Theme.Confinance.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="Theme.Confinance.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
     <style name="BoldTextTermsOfUseAndPrivacy">
         <item name="fontFamily">@font/poppins_semibold</item>
@@ -120,5 +120,14 @@
         <item name="android:indeterminateDrawable">@drawable/teste</item>
     </style>
 
+
+    <style name="BottomSheetDialog" parent="Widget.Design.BottomSheet.Modal">
+        <item name="bottomSheetStyle">@style/bottomSheetStyle</item>
+        <item name="android:height">200dp</item>
+
+    </style>
+    <style name="bottomSheetStyle">
+        <item name="android:background">@android:color/transparent</item>
+    </style>
 
 </resources>

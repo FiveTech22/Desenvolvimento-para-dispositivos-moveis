@@ -34,8 +34,7 @@
                         android:id="@+id/image_fixed_income"
                         android:layout_width="8.56dp"
                         android:layout_height="11dp"
-                        app:srcCompat="@drawable/ic_launcher_background"
-                        android:elevation="4dp"
+                        app:srcCompat="@drawable/icone_fixar"
                         android:visibility="gone"
                         android:layout_marginStart="9dp"
                 />

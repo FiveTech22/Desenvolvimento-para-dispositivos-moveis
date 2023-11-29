@@ -5,6 +5,7 @@ import android.content.Context
 import com.google.gson.Gson
 import com.mycompany.confinance.R
 import com.mycompany.confinance.model.MovementModel
+import com.mycompany.confinance.model.MovementUpdate
 import com.mycompany.confinance.model.ResponseModel
 import com.mycompany.confinance.model.User
 import com.mycompany.confinance.request.ApiListener
@@ -238,22 +239,24 @@ class MovementRepository(private val context: Context) {
         })
     }
 
-    fun getMovementById(idMovement: Long, listener: ApiListener<MovementModel>) {
-        val call = remote.getMovementById(id = idMovement)
-        call.enqueue(object : Callback<MovementModel> {
-            override fun onResponse(call: Call<MovementModel>, response: Response<MovementModel>) {
-                if (response.code() == HttpURLConnection.HTTP_OK) {
+    fun uptadeMovement(id: Long,model: MovementUpdate ,listener: ApiListener<ResponseModel>) {
+
+        val call = remote.uptadeMovement(id= id, model =  model)
+
+        call.enqueue(object :Callback<ResponseModel>{
+            override fun onResponse(call: Call<ResponseModel>, response: Response<ResponseModel>) {
+                if (response.code() == HttpURLConnection.HTTP_OK){
                     response.body()?.let {
                         listener.onSuccess(it)
                     }
-                } else {
+                }else{
                     val error =
                         Gson().fromJson(response.errorBody()?.string(), ResponseModel::class.java)
                     listener.onFailure(error.message, code = error.status)
                 }
             }
 
-            override fun onFailure(call: Call<MovementModel>, t: Throwable) {
+            override fun onFailure(call: Call<ResponseModel>, t: Throwable) {
                 if (t is IOException) {
                     listener.onFailure(context.getString(R.string.error_no_connection), 500)
                 } else {
@@ -262,5 +265,6 @@ class MovementRepository(private val context: Context) {
             }
 
         })
+
     }
 }

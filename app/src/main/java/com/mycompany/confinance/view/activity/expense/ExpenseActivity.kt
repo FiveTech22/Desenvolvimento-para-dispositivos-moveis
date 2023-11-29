@@ -24,7 +24,7 @@ import kotlin.collections.ArrayList
 class ExpenseActivity : AppCompatActivity() {
     private lateinit var binding: ActivityExpenseBinding
     private val viewModel: MovementViewModel by viewModels()
-    private var listRevenue: ArrayList<MovementModel> = arrayListOf()
+    private var listExpense: ArrayList<MovementModel> = arrayListOf()
     private val adapter = MovementAdapter()
     private val calendar = Calendar.getInstance()
     private var id: Long? = null
@@ -44,7 +44,7 @@ class ExpenseActivity : AppCompatActivity() {
     private fun handleMovement() {
         val listener = object : OnClickMovementListener {
             override fun onClick(id: Long) {
-                dialogEdit()
+                dialogEdit(id)
             }
 
             override fun delete(id: Long) {
@@ -58,23 +58,27 @@ class ExpenseActivity : AppCompatActivity() {
 
     private fun observe() {
         viewModel.isLoading.observe(this) { loading ->
-            if (loading == true) {
-                recycler()
-                adapter.startShimmerAnimation()
-            } else if (loading == false) {
-                recycler()
-                adapter.stopShimmerAnimation()
-                viewModel.list.observe(this) { list ->
-                    listRevenue = list as ArrayList
-                    listRevenue.sortedByDescending { it.fixedIncome == true }
-                    adapter.setList(listRevenue)
+            when (loading) {
+                true -> {
+                    recycler()
+                    adapter.startShimmerAnimation()
                 }
-            }else{
-                listRevenue.clear()
-                binding.recycler.visibility= View.GONE
-                binding.imageCreateRevenue.visibility = View.VISIBLE
-                binding.textCreateRevenues.visibility = View.VISIBLE
-                binding.textGuia.visibility = View.VISIBLE
+                false -> {
+                    recycler()
+                    adapter.stopShimmerAnimation()
+                    viewModel.list.observe(this) { list ->
+                        listExpense = list as ArrayList
+                        listExpense.sortedByDescending { it.fixedIncome == true }
+                        adapter.setList(listExpense)
+                    }
+                }
+                else -> {
+                    listExpense.clear()
+                    binding.recycler.visibility= View.GONE
+                    binding.imageCreateExpense.visibility = View.VISIBLE
+                    binding.textCreateExpenses.visibility = View.VISIBLE
+                    binding.textGuia.visibility = View.VISIBLE
+                }
             }
         }
 
@@ -93,15 +97,15 @@ class ExpenseActivity : AppCompatActivity() {
             startActivity(Intent(this, MainActivity::class.java))
             finish()
         }
-        binding.buttonCreateRevenue.setOnClickListener {
+        binding.buttonCreateExpense.setOnClickListener {
             startActivity(Intent(this, CreateExpenseActivity::class.java))
         }
     }
 
     private fun recycler() {
         binding.textGuia.visibility = View.GONE
-        binding.textCreateRevenues.visibility = View.GONE
-        binding.imageCreateRevenue.visibility = View.GONE
+        binding.textCreateExpenses.visibility = View.GONE
+        binding.imageCreateExpense.visibility = View.GONE
         binding.recycler.visibility = View.VISIBLE
         binding.recycler.layoutManager = LinearLayoutManager(applicationContext)
         binding.recycler.adapter = adapter
@@ -111,17 +115,17 @@ class ExpenseActivity : AppCompatActivity() {
     private fun updateMovement(id: Long) {
         var position = 0
         var movement: MovementModel? = null
-        for (i in 0 until listRevenue.size) {
-            if (listRevenue[i].id == id) {
+        for (i in 0 until listExpense.size) {
+            if (listExpense[i].id == id) {
                 position = i
-                movement = listRevenue[i]
+                movement = listExpense[i]
             }
         }
-        listRevenue.remove(movement)
+        listExpense.remove(movement)
         adapter.notifyItemRemoved(position)
     }
 
-    private fun dialogEdit() {
+    private fun dialogEdit(id: Long) {
         if (dialogEdit != null && dialogEdit?.isShowing == true) {
             dialogEdit?.dismiss()
         }
@@ -131,6 +135,16 @@ class ExpenseActivity : AppCompatActivity() {
             CustomDialogEditExpenseBinding.inflate(LayoutInflater.from(this))
         dialogBinding.buttonYesEdit.setOnClickListener {
             dialogEdit?.dismiss()
+
+            val expenseModel = listExpense.find { it.id == id }
+
+            if (expenseModel != null) {
+                val intent = Intent(this, CreateExpenseActivity::class.java)
+                intent.putExtra("expense", expenseModel)
+                startActivity(intent)
+                finish()
+            }
+
         }
         dialogBinding.buttonCancell.setOnClickListener {
             dialogEdit?.dismiss()

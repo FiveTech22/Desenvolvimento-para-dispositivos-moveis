@@ -21,7 +21,7 @@
                 android:layout_alignParentStart="true"
                 android:layout_marginTop="24dp"
                 android:layout_marginStart="85dp"
-                app:srcCompat="@drawable/ic_launcher_background"
+                app:srcCompat="@drawable/sair_da_conta"
         />
 
         <androidx.appcompat.widget.AppCompatTextView

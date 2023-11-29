@@ -1,6 +1,7 @@
 package com.mycompany.confinance.service
 
 import com.mycompany.confinance.model.MovementModel
+import com.mycompany.confinance.model.MovementUpdate
 import com.mycompany.confinance.model.ResponseModel
 import com.mycompany.confinance.util.Constants
 import retrofit2.Call
@@ -27,7 +28,8 @@ interface MovementService {
     @DELETE(Constants.HTTP.URL.URL_DELETE_MOVEMENT)
     fun deleteMovement(@Path("id") id: Long): Call<ResponseModel>
 
-    @GET(Constants.HTTP.URL.URL_RETURN_MOVEMENT_ID)
-    fun getMovementById(@Path("id") id: Long): Call<MovementModel>
+    @PATCH(Constants.HTTP.URL.URL_UPDATE_MOVEMENT)
+    fun uptadeMovement(@Path("id") id: Long, @Body model: MovementUpdate): Call<ResponseModel>
+
 
 }
