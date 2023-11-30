@@ -15,6 +15,7 @@ import com.mycompany.confinance.R
 import com.mycompany.confinance.databinding.ActivityCreateObjectiveBinding
 import com.mycompany.confinance.databinding.CustomBottomSheetErroGenericBinding
 import com.mycompany.confinance.databinding.CustomDialogCancellEditObjectiveBinding
+import com.mycompany.confinance.databinding.CustomDialogErrorBinding
 import com.mycompany.confinance.model.ObjectiveModel
 import com.mycompany.confinance.util.DatePickerFragment
 import com.mycompany.confinance.viewmodel.objective.CreateObjectiveViewModel
@@ -28,6 +29,7 @@ class CreateObjectiveActivity : AppCompatActivity() {
     private var selectedCardView: Int? = null
     private var objective: ObjectiveModel? = null
     private var editDeleteEdit: AlertDialog? = null
+    private var dialogEditErro: AlertDialog? = null
     private lateinit var sheetBinding: CustomBottomSheetErroGenericBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +50,7 @@ class CreateObjectiveActivity : AppCompatActivity() {
                     finish()
                 }
                 false -> {
-                    Toast.makeText(this, "erro", Toast.LENGTH_SHORT).show()
+                    handleErro()
                 }
                 else -> {
                     handleSheet()
@@ -334,6 +336,24 @@ class CreateObjectiveActivity : AppCompatActivity() {
         formato.groupingSize = 3
 
         return formato.format(numero)
+    }
+
+    private fun handleErro() {
+        if (dialogEditErro != null && dialogEditErro?.isShowing == true) {
+            dialogEditErro?.dismiss()
+        }
+
+        val build = AlertDialog.Builder(this, R.style.ThemeCustomDialog)
+        val dialogBinding =
+            CustomDialogErrorBinding.inflate(LayoutInflater.from(this))
+
+        dialogBinding.button.setOnClickListener {
+            dialogEditErro?.dismiss()
+        }
+
+        dialogEditErro = build.setView(dialogBinding.root).create()
+        dialogEditErro?.show()
+
     }
 
 }

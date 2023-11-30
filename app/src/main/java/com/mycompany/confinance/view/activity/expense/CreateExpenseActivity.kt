@@ -7,16 +7,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuInflater
 import android.view.View
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mycompany.confinance.R
-import com.mycompany.confinance.databinding.ActivityCreateExpenseBinding
-import com.mycompany.confinance.databinding.CustomBottomSheetBinding
-import com.mycompany.confinance.databinding.CustomDialogCancellEditExpenseBinding
+import com.mycompany.confinance.databinding.*
 import com.mycompany.confinance.model.MovementModel
 import com.mycompany.confinance.model.MovementUpdate
 import com.mycompany.confinance.util.DatePickerFragment
@@ -28,11 +25,13 @@ import java.util.*
 class CreateExpenseActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCreateExpenseBinding
     private lateinit var sheetBinding: CustomBottomSheetBinding
+    private lateinit var sheet: CustomBottomSheetErroGenericBinding
     private val viewModel: CreateExpenseViewModel by viewModels()
     private var selectedCardView: Int? = null
     private var switchState = false
     private var expense: MovementModel? = null
     private var dialogEditDelete: AlertDialog? = null
+    private var dialogEditErro: AlertDialog? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCreateExpenseBinding.inflate(layoutInflater)
@@ -48,14 +47,53 @@ class CreateExpenseActivity : AppCompatActivity() {
 
     private fun observe() {
         viewModel.isLoading.observe(this) {
-            if (it) {
-                startActivity(Intent(this, ExpenseActivity::class.java))
-                finish()
-            } else {
-                Toast.makeText(this, "erro", Toast.LENGTH_LONG).show()
+            when (it) {
+                true -> {
+                    startActivity(Intent(this, ExpenseActivity::class.java))
+                    finish()
+                }
+
+                false -> {
+                    handleErro()
+                }
+
+                else -> {
+                    handleSheet()
+                }
             }
         }
     }
+
+    private fun handleErro() {
+        if (dialogEditErro != null && dialogEditErro?.isShowing == true) {
+            dialogEditErro?.dismiss()
+        }
+
+        val build = AlertDialog.Builder(this, R.style.ThemeCustomDialog)
+        val dialogBinding =
+            CustomDialogErrorBinding.inflate(LayoutInflater.from(this))
+
+        dialogBinding.button.setOnClickListener {
+            dialogEditErro?.dismiss()
+        }
+
+        dialogEditErro = build.setView(dialogBinding.root).create()
+        dialogEditErro?.show()
+
+    }
+
+    private fun handleSheet() {
+        sheet = CustomBottomSheetErroGenericBinding.inflate(layoutInflater,null , false)
+        val dialog = BottomSheetDialog(this,R.style.BottomSheetDialog)
+
+        sheet.button.setOnClickListener {
+            dialog?.dismiss()
+        }
+
+        dialog.setContentView(sheet.root)
+        dialog.show()
+    }
+
 
     private fun handleClick() {
         binding.arrowClose.setOnClickListener {
@@ -89,7 +127,7 @@ class CreateExpenseActivity : AppCompatActivity() {
     private fun openBottomSheet() {
         var cont: String? = null
         var period: String? = null
-        val dialog = BottomSheetDialog(this)
+        val dialog = BottomSheetDialog(this, R.style.BottomSheetDialog)
         sheetBinding =
             CustomBottomSheetBinding.inflate(
                 layoutInflater, null, false
@@ -181,7 +219,7 @@ class CreateExpenseActivity : AppCompatActivity() {
 
 
     private fun save() {
-        val value = binding.editBalanceExpense.cleanDoubleValue.toString().takeIf { it != "" }?.toDoubleOrNull()
+        val value = binding.editBalanceExpense.text.toString().takeIf { it != "" }?.toDoubleOrNull()
         val description = binding.editTextDescription.text.toString()
         val date = binding.textData.text.toString()
         val fixed = binding.switchExpense.isChecked
@@ -328,8 +366,8 @@ class CreateExpenseActivity : AppCompatActivity() {
         }
 
         if (expense != null) {
-            binding.editBalanceExpense.setText("${formatNumber(expense!!.value)}")
-            binding.editTextDescription.setText("${expense!!.description}")
+            binding.editBalanceExpense.setText(formatNumber(expense!!.value))
+            binding.editTextDescription.setText(expense!!.description)
             binding.textData.text = expense!!.date
 
             if (expense!!.fixedIncome == true) {

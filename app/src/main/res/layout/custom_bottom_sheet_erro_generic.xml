@@ -17,7 +17,6 @@
             android:layout_marginTop="19dp"
             android:layout_marginStart="110dp"
             app:srcCompat="@drawable/erro"
-            app:tint="@color/green_4"
     />
 
     <androidx.appcompat.widget.AppCompatTextView

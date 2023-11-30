@@ -14,28 +14,28 @@ import java.net.HttpURLConnection
 class CreateExpenseViewModel(private val application: Application) : AndroidViewModel(application) {
 
     private val repository = MovementRepository(application)
-    private var _isLoading = MutableLiveData<Boolean>()
-    val isLoading: LiveData<Boolean> = _isLoading
+    private var _isLoading = MutableLiveData<Boolean?>()
+    val isLoading: LiveData<Boolean?> = _isLoading
 
     fun createExpense(
         value: Long?,
         description: String,
-        data: String?,
-        fixedIncome: Boolean?,
-        repetitions: String?,
+        data: String,
+        fixedIncome: Boolean,
+        repetitions: String,
         photo: Int?
     ) {
-        if (value != 0.0.toLong() && description != "" && data != null) {
-            if (fixedIncome == false) {
+        if (value != null && description != "" && data != "Data" && photo != null ) {
+            if (!fixedIncome) {
                 repository.createMovement(
                     context = application,
                     codeType = 2,
-                    value = value!!,
+                    value = value,
                     description = description,
                     fixedIncome = null,
                     data = data,
                     repetitions = repetitions,
-                    photo = photo!!,
+                    photo = photo,
                     listener = object : ApiListener<ResponseModel> {
                         override fun onSuccess(result: ResponseModel) {
                             if (result.status == HttpURLConnection.HTTP_CREATED) {
@@ -77,6 +77,8 @@ class CreateExpenseViewModel(private val application: Application) : AndroidView
                     }
                 )
             }
+        }else{
+            _isLoading.value = null
         }
     }
 

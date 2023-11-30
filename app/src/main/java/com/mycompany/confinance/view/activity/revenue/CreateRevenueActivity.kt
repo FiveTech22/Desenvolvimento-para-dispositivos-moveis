@@ -77,7 +77,7 @@ class CreateRevenueActivity : AppCompatActivity() {
     private fun openBottomSheet() {
         var cont: String? = null
         var period: String? = null
-        val dialog = BottomSheetDialog(this)
+        val dialog = BottomSheetDialog(this,R.style.BottomSheetDialog)
         sheetBinding =
             CustomBottomSheetBinding.inflate(
                 layoutInflater, null, false

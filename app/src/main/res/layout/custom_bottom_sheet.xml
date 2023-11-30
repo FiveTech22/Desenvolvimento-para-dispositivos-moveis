@@ -3,24 +3,18 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_bottom_sheet"
+>
 
 
-    <View
-            android:id="@+id/view_card_revenue"
-            android:layout_width="390dp"
-            android:layout_height="276dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-    />
 
     <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/text_Configure_repeat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="@id/view_card_revenue"
-            app:layout_constraintStart_toStartOf="@id/view_card_revenue"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             android:text="@string/Configure_repeat"
             android:layout_marginTop="27dp"
             android:layout_marginStart="22dp"
@@ -34,7 +28,7 @@
             android:layout_width="26dp"
             android:layout_height="28dp"
             app:layout_constraintTop_toBottomOf="@id/text_Configure_repeat"
-            app:layout_constraintStart_toStartOf="@id/view_card_revenue"
+            app:layout_constraintStart_toStartOf="parent"
             android:layout_marginTop="31dp"
             android:layout_marginStart="17dp"
             app:srcCompat="@drawable/quantidade"
@@ -49,7 +43,7 @@
             app:layout_constraintTop_toTopOf="@id/image_amount"
             android:text="@string/amount"
             android:layout_marginStart="27dp"
-            android:textColor="@color/gray_6"
+            android:textColor="@color/black_opacity_80"
     />
 
 
@@ -93,8 +87,8 @@
             android:layout_width="match_parent"
             android:layout_height="0.8dp"
             app:layout_constraintTop_toBottomOf="@id/image_amount"
-            app:layout_constraintStart_toStartOf="@id/view_card_revenue"
-            app:layout_constraintEnd_toEndOf="@id/view_card_revenue"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             android:background="@color/gray_7"
             android:layout_marginTop="15dp"
     />
@@ -119,7 +113,7 @@
             app:layout_constraintBottom_toBottomOf="@id/image_period"
             android:fontFamily="@font/roboto"
             android:textSize="12sp"
-            android:textColor="@color/gray_6"
+            android:textColor="@color/black_opacity_80"
             android:text="@string/period"
     />
 
@@ -131,6 +125,7 @@
             app:layout_constraintTop_toTopOf="@id/text_period"
             android:layout_marginStart="13dp"
             android:text="@string/monthly"
+            android:textColor="@color/black_opacity_80"
 
     />
 
@@ -148,8 +143,8 @@
             android:layout_width="match_parent"
             android:layout_height="0.8dp"
             app:layout_constraintTop_toBottomOf="@id/image_period"
-            app:layout_constraintStart_toStartOf="@id/view_card_revenue"
-            app:layout_constraintEnd_toEndOf="@id/view_card_revenue"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             android:background="@color/gray_7"
             android:layout_marginTop="22dp"
     />
@@ -160,8 +155,8 @@
             android:layout_width="220dp"
             android:layout_height="33dp"
             app:layout_constraintTop_toBottomOf="@id/view_2"
-            app:layout_constraintStart_toStartOf="@id/view_card_revenue"
-            app:layout_constraintEnd_toEndOf="@id/view_card_revenue"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="31dp"
             android:background="@drawable/button_custom_sheet"
             android:text="@string/concluded"

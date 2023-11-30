@@ -11,10 +11,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.mycompany.confinance.R
-import com.mycompany.confinance.databinding.ActivityUserProfileBinding
-import com.mycompany.confinance.databinding.CustomDialogDadosInvalidationBinding
-import com.mycompany.confinance.databinding.CustomDialogDeleteAccountBinding
-import com.mycompany.confinance.databinding.CustomDialogUserSucessBinding
+import com.mycompany.confinance.databinding.*
 import com.mycompany.confinance.model.UserModel
 import com.mycompany.confinance.view.activity.MainActivity
 import com.mycompany.confinance.viewmodel.user.UserProfileViewModel
@@ -28,6 +25,7 @@ class UserProfileActivity : AppCompatActivity() {
     private var dialogExit: AlertDialog? = null
     private var dialogSucess: AlertDialog? = null
     private var dialogInvalidation: AlertDialog? = null
+    private var dialogEditErro: AlertDialog? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityUserProfileBinding.inflate(layoutInflater)
@@ -50,7 +48,7 @@ class UserProfileActivity : AppCompatActivity() {
             } else if (it == false) {
                 handleDialogUnauthorized()
             } else {
-                Toast.makeText(this, "ocorreu algun erro", Toast.LENGTH_LONG).show()
+                handleErro()
             }
         }
         viewModel.resultDeleteUser.observe(this) {
@@ -58,7 +56,7 @@ class UserProfileActivity : AppCompatActivity() {
                 startActivity(Intent(this, CreateAccountActivity::class.java))
                 finish()
             } else {
-                Toast.makeText(this, "ocorreu algun erro", Toast.LENGTH_LONG).show()
+                handleErro()
             }
         }
     }
@@ -194,6 +192,24 @@ class UserProfileActivity : AppCompatActivity() {
 
         dialogExit = build.setView(bindingDialog.root).create()
         dialogExit?.show()
+    }
+
+    private fun handleErro() {
+        if (dialogEditErro != null && dialogEditErro?.isShowing == true) {
+            dialogEditErro?.dismiss()
+        }
+
+        val build = AlertDialog.Builder(this, R.style.ThemeCustomDialog)
+        val dialogBinding =
+            CustomDialogErrorBinding.inflate(LayoutInflater.from(this))
+
+        dialogBinding.button.setOnClickListener {
+            dialogEditErro?.dismiss()
+        }
+
+        dialogEditErro = build.setView(dialogBinding.root).create()
+        dialogEditErro?.show()
+
     }
 
 }
