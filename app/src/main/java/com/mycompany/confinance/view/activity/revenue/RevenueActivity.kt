@@ -16,6 +16,7 @@ import com.mycompany.confinance.databinding.CustomDialogEditRevenueBinding
 import com.mycompany.confinance.model.MovementModel
 import com.mycompany.confinance.util.OnClickMovementListener
 import com.mycompany.confinance.view.activity.MainActivity
+import com.mycompany.confinance.view.activity.expense.CreateExpenseActivity
 import com.mycompany.confinance.view.adapter.MovementAdapter
 import com.mycompany.confinance.viewmodel.MovementViewModel
 import java.util.*
@@ -45,7 +46,7 @@ class RevenueActivity : AppCompatActivity() {
     private fun handleMovement() {
         val listener = object : OnClickMovementListener {
             override fun onClick(id: Long) {
-                dialogEdit()
+                dialogEdit(id)
             }
 
             override fun delete(id: Long) {
@@ -78,7 +79,7 @@ class RevenueActivity : AppCompatActivity() {
 
     }
 
-    private fun dialogEdit() {
+    private fun dialogEdit(id: Long) {
         if (dialogEdit != null && dialogEdit?.isShowing == true) {
             dialogEdit?.dismiss()
         }
@@ -88,6 +89,16 @@ class RevenueActivity : AppCompatActivity() {
             CustomDialogEditRevenueBinding.inflate(LayoutInflater.from(this))
         dialogBinding.buttonYes.setOnClickListener {
             dialogEdit?.dismiss()
+
+            val revenueModel = listRevenue.find { it.id == id }
+
+            if (revenueModel != null) {
+                val intent = Intent(this, CreateRevenueActivity::class.java)
+                intent.putExtra("revenue", revenueModel)
+                startActivity(intent)
+                finish()
+            }
+
         }
         dialogBinding.buttonCancell.setOnClickListener {
             dialogEdit?.dismiss()
@@ -106,8 +117,8 @@ class RevenueActivity : AppCompatActivity() {
                 adapter.stopShimmerAnimation()
                 viewModel.list.observe(this) { list ->
                     listRevenue = list as ArrayList
-                    listRevenue.sortedByDescending { it.fixedIncome == true }
-                    adapter.setList(listRevenue)
+                 val list =   listRevenue.sortedByDescending { it.fixedIncome == true }
+                    adapter.setList(list)
                 }
             }else{
                 listRevenue.clear()

@@ -92,7 +92,7 @@ class MovementViewHolder(
                     null
                 }
             }
-
+            binding.imageFrequency.visibility = View.VISIBLE
             binding.textFrequency.text = "${movementModel.recurrenceIntervals}x $recurrenceFrequency "
         }
 

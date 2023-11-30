@@ -132,6 +132,7 @@
                             android:layout_toEndOf="@id/image_description"
                             android:hint="@string/description"
                             android:textColorHint="@color/gray_4"
+                            android:textColor="@color/black_opacity_80"
                     />
 
                     <View
@@ -163,9 +164,10 @@
                             android:layout_alignBottom="@id/image_calendar"
                             android:layout_marginTop="3dp"
                             android:fontFamily="@font/roboto_medium"
-                            android:text="@string/date"
+                            android:hint="@string/date"
                             android:textSize="16dp"
-                            android:textColor="@color/gray_4"
+                            android:textColorHint="@color/gray_4"
+                            android:textColor="@color/black_opacity_80"
                     />
 
                     <View
@@ -198,7 +200,7 @@
                             android:text="@string/fixed_income"
                             android:thumb="@drawable/thumber"
                             app:track="@drawable/track"
-                            android:textColor="@color/gray_4"
+                            android:textColor="@color/black_opacity_80"
                     />
 
                     <androidx.appcompat.widget.AppCompatImageView

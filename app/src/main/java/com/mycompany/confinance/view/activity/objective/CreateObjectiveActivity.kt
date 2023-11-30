@@ -347,6 +347,8 @@ class CreateObjectiveActivity : AppCompatActivity() {
         val dialogBinding =
             CustomDialogErrorBinding.inflate(LayoutInflater.from(this))
 
+        dialogBinding.img.setImageResource(R.drawable.erro_blue)
+
         dialogBinding.button.setOnClickListener {
             dialogEditErro?.dismiss()
         }

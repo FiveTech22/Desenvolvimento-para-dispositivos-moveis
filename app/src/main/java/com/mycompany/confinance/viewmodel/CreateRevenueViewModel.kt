@@ -4,6 +4,8 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.mycompany.confinance.model.MovementModel
+import com.mycompany.confinance.model.MovementUpdate
 import com.mycompany.confinance.model.ResponseModel
 import com.mycompany.confinance.repository.MovementRepository
 import com.mycompany.confinance.request.ApiListener
@@ -12,33 +14,33 @@ import java.net.HttpURLConnection
 class CreateRevenueViewModel(private val application: Application) : AndroidViewModel(application) {
 
     private val repository = MovementRepository(application)
-    private var _isLoading = MutableLiveData<Boolean>()
-    val isLoading :LiveData<Boolean> = _isLoading
+    private var _isLoading = MutableLiveData<Boolean?>()
+    val isLoading: LiveData<Boolean?> = _isLoading
 
     fun createRevenue(
-        value: Long,
+        value: Long?,
         description: String,
         data: String?,
         fixedIncome: Boolean?,
         repetitions: String?,
-        photo: Int
-    ){
-        if (value != 0.0.toLong() && description != "" && data != null) {
+        photo: Int?
+    ) {
+        if (value != null || description != "" || data != "Data" && photo != null) {
             if (fixedIncome == false) {
                 repository.createMovement(
                     context = application,
                     codeType = 1,
-                    value = value,
+                    value = value!!,
                     description = description,
                     fixedIncome = null,
-                    data = data,
+                    data = data!!,
                     repetitions = repetitions,
-                    photo = photo,
+                    photo = photo!!,
                     listener = object : ApiListener<ResponseModel> {
                         override fun onSuccess(result: ResponseModel) {
                             if (result.status == HttpURLConnection.HTTP_CREATED) {
                                 _isLoading.value = true
-                            }else{
+                            } else {
                                 _isLoading.value = false
                             }
                         }
@@ -53,17 +55,17 @@ class CreateRevenueViewModel(private val application: Application) : AndroidView
                 repository.createMovement(
                     context = application,
                     codeType = 1,
-                    value = value,
+                    value = value!!,
                     description = description,
-                    data = data,
+                    data = data!!,
                     fixedIncome = fixedIncome,
                     repetitions = null,
-                    photo = photo,
+                    photo = photo!!,
                     listener = object : ApiListener<ResponseModel> {
                         override fun onSuccess(result: ResponseModel) {
                             if (result.status == HttpURLConnection.HTTP_CREATED) {
                                 _isLoading.value = true
-                            }else{
+                            } else {
                                 _isLoading.value = false
                             }
                         }
@@ -75,6 +77,54 @@ class CreateRevenueViewModel(private val application: Application) : AndroidView
                     }
                 )
             }
+        } else {
+            _isLoading.value = null
         }
     }
-}
+
+
+    fun updateRevenue(updateRevenue: MovementUpdate, revenue: MovementModel) {
+
+        if (updateRevenue.value != null || updateRevenue.description != "" || updateRevenue.date != "Data" || updateRevenue.photo != null) {
+            val updatedValue = updateRevenue.value.takeIf { it != revenue.value }
+            val updatedDescription = updateRevenue.description.takeIf { it != revenue.description }
+            val updatedPhoto = updateRevenue.photo.takeIf { it != revenue.photo }
+            val updatedDate = updateRevenue.date.takeIf { it != revenue.date }
+            val fixed = updateRevenue.fixedIncome.takeIf { it != revenue.fixedIncome }
+            val frequency = updateRevenue.recurrenceFrequency.takeIf { it != revenue.recurrenceFrequency }
+            val intervals = updateRevenue.recurrenceIntervals.takeIf { it != revenue.recurrenceIntervals }
+
+            repository.uptadeMovement(
+                id = revenue.id!!,
+                model = MovementUpdate(
+                    description = updatedDescription,
+                    photo = updatedPhoto,
+                    value = updatedValue,
+                    fixedIncome = fixed,
+                    recurrenceFrequency = frequency,
+                    recurrenceIntervals = intervals,
+                    date = updatedDate
+                ),
+                listener = object : ApiListener<ResponseModel> {
+                    override fun onSuccess(result: ResponseModel) {
+                        if (result.status == HttpURLConnection.HTTP_OK) {
+                            _isLoading.value = true
+                        } else {
+                            _isLoading.value = false
+                        }
+                    }
+
+                    override fun onFailure(message: String?, code: Int) {
+                        _isLoading.value = false
+
+                    }
+
+                }
+            )
+        }else{
+            _isLoading.value = null
+        }
+
+    }
+
+    }

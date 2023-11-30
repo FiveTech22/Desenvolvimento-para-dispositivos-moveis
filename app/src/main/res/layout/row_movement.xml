@@ -103,26 +103,28 @@
 
                 <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/image_frequency"
-                        android:layout_width="10.53dp"
-                        android:layout_height="10dp"
+                        android:layout_width="11.61dp"
+                        android:layout_height="11.03dp"
                         android:layout_alignParentStart="true"
                         android:layout_alignParentBottom="true"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginBottom="11.41dp"
+                        android:layout_marginStart="7.72dp"
+                        android:layout_marginBottom="9.28dp"
                         android:visibility="gone"
+                        app:srcCompat="@drawable/repeti__o"
                 />
 
                 <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/text_frequency"
                         android:layout_width="wrap_content"
-                        android:layout_height="12dp"
-                        android:layout_alignTop="@id/image_frequency"
+                        android:layout_height="wrap_content"
                         android:layout_alignBottom="@id/image_frequency"
                         android:layout_toEndOf="@id/image_frequency"
                         android:fontFamily="@font/roboto_medium"
-                        android:textSize="10sp"
+                        android:textSize="10.68sp"
                         android:textColor="@color/black_opacity_50"
                         android:visibility="gone"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginBottom="-1dp"
                 />
 
 

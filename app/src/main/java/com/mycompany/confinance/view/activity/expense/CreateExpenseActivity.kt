@@ -255,7 +255,7 @@ class CreateExpenseActivity : AppCompatActivity() {
                 }
                 viewModel.updateExpense(
                     updateExpense = MovementUpdate(
-                        description = null,
+                        description = description,
                         value = value?.toLong(),
                         photo = selectedCardView,
                         date = date,
@@ -374,6 +374,7 @@ class CreateExpenseActivity : AppCompatActivity() {
             binding.textData.text = expense!!.date
 
             if (expense!!.fixedIncome == true) {
+                switchState = true
                 binding.switchExpense.isChecked = true
                 binding.textRepetition.text = "Repetições"
             } else {

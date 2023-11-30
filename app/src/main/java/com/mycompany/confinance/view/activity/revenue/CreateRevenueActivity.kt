@@ -1,37 +1,45 @@
 package com.mycompany.confinance.view.activity.revenue
 
 import android.annotation.SuppressLint
-import android.app.DatePickerDialog
-import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.MenuInflater
 import android.view.View
-import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
-import androidx.core.content.ContextCompat
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mycompany.confinance.R
-import com.mycompany.confinance.databinding.ActivityCreateRevenueBinding
-import com.mycompany.confinance.databinding.CustomBottomSheetBinding
+import com.mycompany.confinance.databinding.*
+import com.mycompany.confinance.model.MovementModel
+import com.mycompany.confinance.model.MovementUpdate
 import com.mycompany.confinance.util.DatePickerFragment
 import com.mycompany.confinance.viewmodel.CreateRevenueViewModel
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.util.*
 
 class CreateRevenueActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCreateRevenueBinding
     private lateinit var sheetBinding: CustomBottomSheetBinding
+    private lateinit var sheet: CustomBottomSheetErroGenericBinding
     private val viewModel: CreateRevenueViewModel by viewModels()
     private var selectedCardView: Int? = null
     private var switchState = false
+    private var dialogEditErro: AlertDialog? = null
+    private var dialogEditDelete: AlertDialog? = null
+    private var revenue: MovementModel? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCreateRevenueBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        editRevenue()
         handleDate()
         handleClick()
         handleRepetition()
@@ -40,18 +48,31 @@ class CreateRevenueActivity : AppCompatActivity() {
 
     private fun observe() {
         viewModel.isLoading.observe(this) {
-            if (it) {
-                startActivity(Intent(this,RevenueActivity::class.java))
-                finish()
-            } else {
-                Toast.makeText(this, "erro", Toast.LENGTH_LONG).show()
+            when(it) {
+                true -> {
+                    startActivity(Intent(this, RevenueActivity::class.java))
+                    finish()
+                }
+
+                false -> {
+                    handleErro()
+                }
+
+                else -> {
+                    handleSheet()
+                }
             }
         }
     }
 
+
     private fun handleClick() {
         binding.arrowClose.setOnClickListener {
-            finish()
+            if (revenue != null) {
+                dialogEdit()
+            } else {
+                finish()
+            }
         }
 
         handleCategory()
@@ -77,7 +98,7 @@ class CreateRevenueActivity : AppCompatActivity() {
     private fun openBottomSheet() {
         var cont: String? = null
         var period: String? = null
-        val dialog = BottomSheetDialog(this,R.style.BottomSheetDialog)
+        val dialog = BottomSheetDialog(this, R.style.BottomSheetDialog)
         sheetBinding =
             CustomBottomSheetBinding.inflate(
                 layoutInflater, null, false
@@ -158,7 +179,7 @@ class CreateRevenueActivity : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n", "SuspiciousIndentation")
     private fun onDateSelect(day: Int, mounth: Int, year: Int) {
-        val mounthNew = mounth+1
+        val mounthNew = mounth + 1
         val formattedDay = if (day <= 9) "0$day" else "$day"
         val formattedMonth = if (mounthNew <= 9) "0$mounthNew" else "$mounthNew"
         val formattedDate = "$formattedDay/$formattedMonth/$year"
@@ -167,21 +188,75 @@ class CreateRevenueActivity : AppCompatActivity() {
 
 
     private fun save() {
-            val value = binding.editBalanceRevenue.cleanDoubleValue
-            val description = binding.editTextDescription.text.toString()
-            val date = binding.textData.text.toString()
-            val fixed = binding.switchRevenue.isChecked
-            val repetition = binding.textRepetition.text.toString()
-            val photo = selectedCardView
+        val value = binding.editBalanceRevenue.text.toString().takeIf { it != "" }?.toDoubleOrNull()
+        val description = binding.editTextDescription.text.toString()
+        val date = binding.textData.text.toString()
+        val fixed = binding.switchRevenue.isChecked
+        val repetition = binding.textRepetition.text.toString()
+        val photo = selectedCardView
+        var recurrenceIntervals: Int? = null
+        var recurrenceFrequency: String? = null
 
+        if (revenue != null) {
+            if (repetition != "Repetições") {
+                val part = repetition.split("x ")
+                recurrenceIntervals = part[0].toInt()
+                recurrenceFrequency = part[1]
+                when (recurrenceFrequency) {
+                    "Semanal" -> {
+                        recurrenceFrequency = "weekly"
+                    }
+
+                    "Diário" -> {
+                        recurrenceFrequency = "daily"
+                    }
+
+                    "Mensal" -> {
+                        recurrenceFrequency = "monthly"
+                    }
+
+                    "Anual" -> {
+                        recurrenceFrequency = "annually"
+                    }
+                }
+                viewModel.updateRevenue(
+                    updateRevenue = MovementUpdate(
+                        description = description,
+                        value = value?.toLong(),
+                        photo = selectedCardView,
+                        date = date,
+                        fixedIncome = fixed,
+                        recurrenceIntervals = recurrenceIntervals,
+                        recurrenceFrequency = recurrenceFrequency
+                    ),
+                    revenue= revenue!!
+                )
+            } else {
+                viewModel.updateRevenue(
+                    updateRevenue = MovementUpdate(
+                        description = description,
+                        value = value?.toLong(),
+                        photo = selectedCardView,
+                        date = date,
+                        fixedIncome = fixed,
+                        recurrenceIntervals = recurrenceIntervals,
+                        recurrenceFrequency = recurrenceFrequency
+                    ),
+                    revenue= revenue!!
+                )
+            }
+
+        } else {
             viewModel.createRevenue(
-                value.toLong(),
+                value?.toLong(),
                 description = description,
                 data = date,
                 fixedIncome = fixed,
                 repetitions = repetition,
-                photo = photo!!
+                photo = photo
             )
+        }
+
     }
 
     @SuppressLint("ResourceAsColor")
@@ -234,6 +309,136 @@ class CreateRevenueActivity : AppCompatActivity() {
 
     }
 
+    private fun handleErro() {
+        if (dialogEditErro != null && dialogEditErro?.isShowing == true) {
+            dialogEditErro?.dismiss()
+        }
 
+        val build = AlertDialog.Builder(this, R.style.ThemeCustomDialog)
+        val dialogBinding =
+            CustomDialogErrorBinding.inflate(LayoutInflater.from(this))
+
+        dialogBinding.button.setOnClickListener {
+            dialogEditErro?.dismiss()
+        }
+
+        dialogEditErro = build.setView(dialogBinding.root).create()
+        dialogEditErro?.show()
+
+    }
+
+    private fun handleSheet() {
+        sheet = CustomBottomSheetErroGenericBinding.inflate(layoutInflater, null, false)
+        val dialog = BottomSheetDialog(this, R.style.BottomSheetDialog)
+
+        sheet.imgAlert.setBackgroundResource(R.drawable.erro_green)
+
+        sheet.button.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.setContentView(sheet.root)
+        dialog.show()
+    }
+
+
+    private fun dialogEdit() {
+        if (dialogEditDelete != null && dialogEditDelete?.isShowing == true) {
+            dialogEditDelete?.dismiss()
+        }
+        val build = AlertDialog.Builder(this, R.style.ThemeCustomDialog)
+        val dialogBinding =
+            CustomDialogCancellEditExpenseBinding.inflate(LayoutInflater.from(this))
+        dialogBinding.buttonYesDelete.setOnClickListener {
+            dialogEditDelete?.dismiss()
+            startActivity(Intent(this, RevenueActivity::class.java))
+            finish()
+        }
+        dialogBinding.buttonNo.setOnClickListener {
+            dialogEditDelete?.dismiss()
+        }
+        dialogEditDelete = build.setView(dialogBinding.root).create()
+        dialogEditDelete?.show()
+    }
+
+    private fun formatNumber(numero: Long?): String {
+        val formato = DecimalFormat("#,##0.00", DecimalFormatSymbols(Locale("pt", "BR")))
+        formato.isGroupingUsed = true
+        formato.groupingSize = 3
+
+        return formato.format(numero)
+    }
+
+    @Suppress("DEPRECATION")
+    @SuppressLint("SetTextI18n")
+    private fun editRevenue() {
+        revenue = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent.getParcelableExtra("revenue", MovementModel::class.java)
+        } else {
+            intent.getParcelableExtra("revenue")
+        }
+
+        if (revenue != null) {
+            binding.editBalanceRevenue.setText(formatNumber(revenue!!.value))
+            binding.editTextDescription.setText(revenue!!.description)
+            binding.textData.text = revenue!!.date
+
+            if (revenue!!.fixedIncome == true) {
+                switchState = true
+                binding.switchRevenue.isChecked = true
+                binding.textRepetition.text = "Repetições"
+            } else {
+                val recurrenceFrequency = when (revenue!!.recurrenceFrequency) {
+                    "weekly" -> {
+                        "Semanal"
+                    }
+
+                    "daily" -> {
+                        "Diário"
+                    }
+
+                    "monthly" -> {
+                        "Mensal"
+                    }
+
+                    "annually" -> {
+                        "Anual"
+                    }
+
+                    else -> {
+                        null
+                    }
+                }
+
+                if(recurrenceFrequency != null || revenue?.recurrenceIntervals != null){
+                    binding.textRepetition.text = "${revenue?.recurrenceIntervals}x $recurrenceFrequency "
+                }
+
+            }
+            when (revenue?.photo) {
+                1 -> {
+                    selectedCardView = 1
+                    binding.imgSalary.setImageResource(R.drawable.salario_verde)
+                }
+
+                2 -> {
+                    selectedCardView = 2
+                    binding.imgInvesty.setImageResource(R.drawable.investimento_verde)
+                }
+
+                3 -> {
+                    selectedCardView = 3
+                    binding.imgService.setImageResource(R.drawable.servi_os_verde)
+                }
+
+                4 -> {
+                    selectedCardView = 4
+                    binding.imgOuther.setImageResource(R.drawable.outros_verde)
+
+                }
+            }
+            binding.buttonCreate.text = "Salvar"
+        }
+    }
 }
 
