@@ -398,7 +398,11 @@ class CreateExpenseActivity : AppCompatActivity() {
                         null
                     }
                 }
-                binding.textRepetition.text = "${expense?.recurrenceIntervals}x $recurrenceFrequency "
+
+                if(recurrenceFrequency != null || expense?.recurrenceIntervals != null){
+                    binding.textRepetition.text = "${expense?.recurrenceIntervals}x $recurrenceFrequency "
+                }
+
             }
             when (expense?.photo) {
                 1 -> {
