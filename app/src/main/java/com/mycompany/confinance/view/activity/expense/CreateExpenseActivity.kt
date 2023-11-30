@@ -87,7 +87,7 @@ class CreateExpenseActivity : AppCompatActivity() {
         val dialog = BottomSheetDialog(this,R.style.BottomSheetDialog)
 
         sheet.button.setOnClickListener {
-            dialog?.dismiss()
+            dialog.dismiss()
         }
 
         dialog.setContentView(sheet.root)
@@ -114,6 +114,9 @@ class CreateExpenseActivity : AppCompatActivity() {
     private fun handleRepetition() {
         binding.switchExpense.setOnCheckedChangeListener { _, isChecked ->
             switchState = isChecked
+            if (switchState && binding.textRepetition.text.toString() != "Repetições"){
+                binding.textRepetition.text = "Repetições"
+            }
         }
 
         binding.textRepetition.setOnClickListener {

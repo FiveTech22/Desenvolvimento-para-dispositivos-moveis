@@ -37,6 +37,7 @@
                         app:srcCompat="@drawable/icone_fixar"
                         android:visibility="gone"
                         android:layout_marginStart="9dp"
+                        android:translationY="-2dp"
                 />
 
                 <androidx.appcompat.widget.AppCompatImageView

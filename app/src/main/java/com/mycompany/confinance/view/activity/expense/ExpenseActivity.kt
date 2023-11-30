@@ -68,8 +68,8 @@ class ExpenseActivity : AppCompatActivity() {
                     adapter.stopShimmerAnimation()
                     viewModel.list.observe(this) { list ->
                         listExpense = list as ArrayList
-                        listExpense.sortedByDescending { it.fixedIncome == true }
-                        adapter.setList(listExpense)
+                    val list=    listExpense.sortedByDescending { it.fixedIncome == true }
+                        adapter.setList(list)
                     }
                 }
                 else -> {
