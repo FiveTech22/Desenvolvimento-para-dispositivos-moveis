@@ -278,15 +278,15 @@
                     />
 
                     <androidx.appcompat.widget.AppCompatImageView
-                            android:layout_width="37.13dp"
-                            android:layout_height="37.13dp"
+                            android:layout_width="38dp"
+                            android:layout_height="38dp"
                             app:srcCompat="@drawable/casa_obj_"
                             android:elevation="3.71dp"
                             android:layout_alignTop="@id/card_house"
                             android:layout_alignBottom="@id/card_house"
                             android:layout_alignEnd="@+id/card_house"
                             android:layout_alignStart="@id/card_house"
-                            android:layout_marginTop="8dp"
+                            android:layout_marginTop="11dp"
                     />
 
                     <View
@@ -300,8 +300,8 @@
                     />
 
                     <androidx.appcompat.widget.AppCompatImageView
-                            android:layout_width="37.13dp"
-                            android:layout_height="37.13dp"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
                             app:srcCompat="@drawable/ob__3"
                             android:elevation="3.71dp"
                             android:layout_alignTop="@id/card_cell"
@@ -322,8 +322,8 @@
                     />
 
                     <androidx.appcompat.widget.AppCompatImageView
-                            android:layout_width="37.13dp"
-                            android:layout_height="37.13dp"
+                            android:layout_width="38dp"
+                            android:layout_height="38dp"
                             app:srcCompat="@drawable/ob__4"
                             android:elevation="3.71dp"
                             android:layout_alignTop="@id/card_Marketplace"
@@ -344,8 +344,8 @@
                     />
 
                     <androidx.appcompat.widget.AppCompatImageView
-                            android:layout_width="37.13dp"
-                            android:layout_height="37.13dp"
+                            android:layout_width="44dp"
+                            android:layout_height="44dp"
                             app:srcCompat="@drawable/ob__5"
                             android:elevation="3.71dp"
                             android:layout_marginTop="8dp"
@@ -364,8 +364,8 @@
                     />
 
                     <androidx.appcompat.widget.AppCompatImageView
-                            android:layout_width="37.13dp"
-                            android:layout_height="37.13dp"
+                            android:layout_width="44dp"
+                            android:layout_height="44dp"
                             app:srcCompat="@drawable/ob__6"
                             android:elevation="3.71dp"
                             android:layout_marginTop="8dp"
@@ -385,8 +385,8 @@
                     />
 
                     <androidx.appcompat.widget.AppCompatImageView
-                            android:layout_width="37.13dp"
-                            android:layout_height="37.13dp"
+                            android:layout_width="44dp"
+                            android:layout_height="44dp"
                             app:srcCompat="@drawable/ob__7"
                             android:elevation="3.71dp"
                             android:layout_marginTop="8dp"
@@ -407,8 +407,8 @@
 
 
                     <androidx.appcompat.widget.AppCompatImageView
-                            android:layout_width="37.13dp"
-                            android:layout_height="37.13dp"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
                             app:srcCompat="@drawable/estudo_obj_"
                             android:elevation="3.71dp"
                             android:layout_marginTop="8dp"
