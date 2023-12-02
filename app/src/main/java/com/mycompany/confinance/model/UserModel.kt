@@ -8,5 +8,6 @@ data class UserModel (
     var id: Long? = null,
     var name:String?,
     var email:String?,
-    val password:String?
+    val password:String?,
+    var photo: Int?
 ) : Parcelable

@@ -52,7 +52,7 @@ class UserRepository(private val context: Context) {
     fun createAccount(
         name: String, email: String, password: String, listener: ApiListener<ResponseModel>
     ) {
-        val call = remote.createAccount(UserModel(null, name, email, password))
+        val call = remote.createAccount(UserModel(null, name, email, password,1))
 
         call.enqueue(object : Callback<ResponseModel> {
             override fun onResponse(call: Call<ResponseModel>, response: Response<ResponseModel>) {
@@ -226,6 +226,7 @@ class UserRepository(private val context: Context) {
             override fun onResponse(call: Call<UserModel>, response: Response<UserModel>) {
                 if (response.code() == HTTP_OK) {
                     response.body()?.let {
+                        SharedPreferencesUtil.saveImg(context = context, it.photo!!)
                         listener.onSuccess(it)
                     }
                 }
@@ -242,11 +243,10 @@ class UserRepository(private val context: Context) {
         })
     }
 
-    fun uptadeForNameAndEmail(name: String?, email: String?, listener: ApiListener<ResponseModel>) {
-        if (email == null) {
+    fun updateForNameOrEmailOrPhoto(name: String?, email: String?, photo:Int?, listener: ApiListener<ResponseModel>) {
             val call = remote.uptadeUser(
                 id = SharedPreferencesUtil.getUserId(context),
-                user = UserModel(null, name, null, null)
+                user = UserModel(null, name, email, null, photo)
             )
 
             call.enqueue(object : Callback<ResponseModel> {
@@ -255,6 +255,9 @@ class UserRepository(private val context: Context) {
                         response.body()?.let {
                             listener.onSuccess(it)
                         }
+                    }else{
+                        val error = Gson().fromJson(response.errorBody()?.string(), ResponseModel::class.java)
+                        listener.onFailure(message = error.message, code = error.status)
                     }
                 }
 
@@ -267,57 +270,6 @@ class UserRepository(private val context: Context) {
                 }
 
             })
-        } else if(name == null) {
-            val call = remote.uptadeUser(
-                id = SharedPreferencesUtil.getUserId(context),
-                user = UserModel(null, null, email, null)
-            )
-
-            call.enqueue(object : Callback<ResponseModel> {
-                override fun onResponse(call: Call<ResponseModel>, response: Response<ResponseModel>) {
-                    if (response.code() == HTTP_OK) {
-                        response.body()?.let {
-                            listener.onSuccess(it)
-                        }
-                    }
-                }
-
-                override fun onFailure(call: Call<ResponseModel>, t: Throwable) {
-                    if (t is IOException) {
-                        listener.onFailure(context.getString(R.string.error_no_connection), 500)
-                    } else {
-                        listener.onFailure(context.getString(R.string.error_generic), 500)
-                    }
-                }
-
-            })
-
-        }
-        else{
-            val call = remote.uptadeUser(
-                id = SharedPreferencesUtil.getUserId(context),
-                user = UserModel(null, name, email, null)
-            )
-
-            call.enqueue(object : Callback<ResponseModel> {
-                override fun onResponse(call: Call<ResponseModel>, response: Response<ResponseModel>) {
-                    if (response.code() == HTTP_OK) {
-                        response.body()?.let {
-                            listener.onSuccess(it)
-                        }
-                    }
-                }
-
-                override fun onFailure(call: Call<ResponseModel>, t: Throwable) {
-                    if (t is IOException) {
-                        listener.onFailure(context.getString(R.string.error_no_connection), 500)
-                    } else {
-                        listener.onFailure(context.getString(R.string.error_generic), 500)
-                    }
-                }
-
-            })
-        }
     }
 
     fun upgradePassword(password: String, newPassword: String, listener: ApiListener<ResponseModel>) {

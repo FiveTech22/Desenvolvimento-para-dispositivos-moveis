@@ -17,7 +17,7 @@ import com.mycompany.confinance.databinding.*
 import com.mycompany.confinance.model.MovementModel
 import com.mycompany.confinance.model.MovementUpdate
 import com.mycompany.confinance.util.DatePickerFragment
-import com.mycompany.confinance.viewmodel.CreateExpenseViewModel
+import com.mycompany.confinance.viewmodel.expense.CreateExpenseViewModel
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.util.*

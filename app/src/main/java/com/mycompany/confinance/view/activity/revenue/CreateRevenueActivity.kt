@@ -17,7 +17,7 @@ import com.mycompany.confinance.databinding.*
 import com.mycompany.confinance.model.MovementModel
 import com.mycompany.confinance.model.MovementUpdate
 import com.mycompany.confinance.util.DatePickerFragment
-import com.mycompany.confinance.viewmodel.CreateRevenueViewModel
+import com.mycompany.confinance.viewmodel.revenue.CreateRevenueViewModel
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.util.*
@@ -348,8 +348,8 @@ class CreateRevenueActivity : AppCompatActivity() {
         }
         val build = AlertDialog.Builder(this, R.style.ThemeCustomDialog)
         val dialogBinding =
-            CustomDialogCancellEditExpenseBinding.inflate(LayoutInflater.from(this))
-        dialogBinding.buttonYesDelete.setOnClickListener {
+            CustomDialogCancellEditRevenueBinding.inflate(LayoutInflater.from(this))
+        dialogBinding.buttonYesExit.setOnClickListener {
             dialogEditDelete?.dismiss()
             startActivity(Intent(this, RevenueActivity::class.java))
             finish()

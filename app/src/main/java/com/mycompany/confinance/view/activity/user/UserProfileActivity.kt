@@ -1,18 +1,19 @@
 package com.mycompany.confinance.view.activity.user
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.mycompany.confinance.R
 import com.mycompany.confinance.databinding.*
 import com.mycompany.confinance.model.UserModel
+import com.mycompany.confinance.util.SharedPreferencesUtil
 import com.mycompany.confinance.view.activity.MainActivity
 import com.mycompany.confinance.viewmodel.user.UserProfileViewModel
 
@@ -26,6 +27,11 @@ class UserProfileActivity : AppCompatActivity() {
     private var dialogSucess: AlertDialog? = null
     private var dialogInvalidation: AlertDialog? = null
     private var dialogEditErro: AlertDialog? = null
+    private var photo: Int? = null
+
+    companion object {
+        private const val REQUEST_CODE_ICON_ACTIVITY = 1001
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityUserProfileBinding.inflate(layoutInflater)
@@ -36,9 +42,21 @@ class UserProfileActivity : AppCompatActivity() {
         handleClick()
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE_ICON_ACTIVITY && resultCode == Activity.RESULT_OK) {
+            imgIcone()
+        }
+    }
+
+
+
+
     private fun observe() {
         viewModel.user.observe(this) {
             user = it
+            photo = it.photo
+            imgIcone()
             binding.editName.setText(user.name)
             binding.editEmail.setText(user.email)
         }
@@ -91,6 +109,7 @@ class UserProfileActivity : AppCompatActivity() {
         dialogInvalidation?.show()
     }
 
+    @Suppress("DEPRECATION")
     private fun handleClick() {
         binding.arrowBack.setOnClickListener {
             finish()
@@ -159,7 +178,7 @@ class UserProfileActivity : AppCompatActivity() {
         binding.imageConfirm.setOnClickListener {
             val email = binding.editEmail.text.toString()
             val name = binding.editName.text.toString()
-            viewModel.updateNameAndEmail(email, name, user)
+            viewModel.updateNameOrEmailOrPhoto(email, name, photo, user)
         }
 
         binding.buttonUpdatePassword.setOnClickListener {
@@ -171,9 +190,10 @@ class UserProfileActivity : AppCompatActivity() {
         }
 
         binding.imagePerfil.setOnClickListener {
-            startActivity(Intent(this,IconActivity::class.java))
+            startActivityForResult(Intent(this, IconActivity::class.java), REQUEST_CODE_ICON_ACTIVITY)
         }
     }
+
 
     private fun handleDialogDelete() {
         if (dialogExit != null && dialogExit?.isShowing == true) {
@@ -210,6 +230,101 @@ class UserProfileActivity : AppCompatActivity() {
         dialogEditErro = build.setView(dialogBinding.root).create()
         dialogEditErro?.show()
 
+    }
+
+    private fun imgIcone() {
+        val img = SharedPreferencesUtil.getImg(context = this)
+
+        if (img != user.photo) {
+            when (img) {
+                1 -> {
+                    photo = 1
+                    binding.imagePerfil.setImageResource(R.drawable.perfil_5)
+                }
+
+                2 -> {
+                    photo = 2
+                    binding.imagePerfil.setImageResource(R.drawable.perfil_4)
+                }
+
+                3 -> {
+                    photo = 3
+                    binding.imagePerfil.setImageResource(R.drawable.perfil_3)
+                }
+
+                4 -> {
+                    photo = 4
+                    binding.imagePerfil.setImageResource(R.drawable.perfil_2)
+                }
+
+                5 -> {
+                    photo = 5
+                    binding.imagePerfil.setImageResource(R.drawable.perfil_1)
+                }
+
+                6 -> {
+                    photo = 6
+                    binding.imagePerfil.setImageResource(R.drawable.perfil_h1)
+                }
+
+                7 -> {
+                    photo = 7
+                    binding.imagePerfil.setImageResource(R.drawable.perfil_m1)
+                }
+
+                8 -> {
+                    photo = 8
+                    binding.imagePerfil.setImageResource(R.drawable.perfil_m2)
+                }
+
+                9 -> {
+                    photo = 9
+                    binding.imagePerfil.setImageResource(R.drawable.perfil_h2)
+                }
+
+                10 -> {
+                    photo = 10
+                    binding.imagePerfil.setImageResource(R.drawable.perfil_h3)
+                }
+                11 -> {
+                    photo = 11
+                    binding.imagePerfil.setImageResource(R.drawable.perfil_6)
+                }
+                12 -> {
+                    photo = 12
+                    binding.imagePerfil.setImageResource(R.drawable.perfil_7)
+                }
+                13 -> {
+                    photo = 13
+                    binding.imagePerfil.setImageResource(R.drawable.perfil_8)
+                }
+                14 -> {
+                    photo = 14
+                    binding.imagePerfil.setImageResource(R.drawable.perfil_9)
+                }
+                15 -> {
+                    photo = 15
+                    binding.imagePerfil.setImageResource(R.drawable.perfil_10)
+                }
+                16 -> {
+                    photo = 16
+                    binding.imagePerfil.setImageResource(R.drawable.perfil_11)
+                }
+                17 -> {
+                    photo = 17
+                    binding.imagePerfil.setImageResource(R.drawable.perfil_12)
+                }18-> {
+                    photo = 18
+                    binding.imagePerfil.setImageResource(R.drawable.perfil_13)
+                }19 -> {
+                    photo = 19
+                    binding.imagePerfil.setImageResource(R.drawable.perfil_14)
+                }20 -> {
+                    photo = 20
+                    binding.imagePerfil.setImageResource(R.drawable.perfil_15)
+                }
+            }
+        }
     }
 
 }

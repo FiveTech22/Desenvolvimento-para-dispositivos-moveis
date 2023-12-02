@@ -8,8 +8,8 @@ import com.mycompany.confinance.model.ResponseModel
 import com.mycompany.confinance.model.UserModel
 import com.mycompany.confinance.repository.UserRepository
 import com.mycompany.confinance.request.ApiListener
-import java.net.HttpURLConnection
-import java.net.HttpURLConnection.*
+import java.net.HttpURLConnection.HTTP_OK
+import java.net.HttpURLConnection.HTTP_UNAUTHORIZED
 
 class UserProfileViewModel(private val application: Application) : AndroidViewModel(application) {
     private val repository = UserRepository(application)
@@ -37,7 +37,8 @@ class UserProfileViewModel(private val application: Application) : AndroidViewMo
     fun getUser() {
         repository.getUser(listener = object : ApiListener<UserModel> {
             override fun onSuccess(result: UserModel) {
-                _user.value = UserModel(id = result.id, name = result.name, email = result.email, password = "")
+                _user.value =
+                    UserModel(id = result.id, name = result.name, email = result.email, password = "", result.photo)
             }
 
             override fun onFailure(message: String?, code: Int) {
@@ -47,9 +48,17 @@ class UserProfileViewModel(private val application: Application) : AndroidViewMo
         })
     }
 
-    fun updateNameAndEmail(email: String, name: String, user: UserModel) {
-        if (name != user.name) {
-            repository.uptadeForNameAndEmail(name, null, listener = object : ApiListener<ResponseModel> {
+    fun updateNameOrEmailOrPhoto(email: String, name: String, photo: Int?, user: UserModel) {
+
+        val email = email.takeIf { it != user.email }
+        val name = name.takeIf { it != user.name }
+        val photo = photo.takeIf { it != user.photo }
+
+        repository.updateForNameOrEmailOrPhoto(
+            name = name,
+            email = email,
+            photo = photo,
+            listener = object : ApiListener<ResponseModel> {
                 override fun onSuccess(result: ResponseModel) {
                     _isLoadingUpdate.value = result.status == HTTP_OK
                 }
@@ -59,29 +68,6 @@ class UserProfileViewModel(private val application: Application) : AndroidViewMo
                 }
 
             })
-            } else if (email != user.email) {
-            repository.uptadeForNameAndEmail(null, email, listener = object : ApiListener<ResponseModel> {
-                override fun onSuccess(result: ResponseModel) {
-                    _isLoadingUpdate.value = result.status == HTTP_OK
-                }
-
-                override fun onFailure(message: String?, code: Int) {
-                    _isLoadingUpdate.value = false
-                }
-
-            })
-            }else if (email != user.email && name != user.name){
-            repository.uptadeForNameAndEmail(name, email, listener = object : ApiListener<ResponseModel> {
-                override fun onSuccess(result: ResponseModel) {
-                    _isLoadingUpdate.value = result.status == HTTP_OK
-                }
-
-                override fun onFailure(message: String?, code: Int) {
-                    _isLoadingUpdate.value = false
-                }
-
-            })
-        }
     }
 
     fun uptadePassword(password: String, newPassword: String, newPasswordAgain: String) {
@@ -96,9 +82,9 @@ class UserProfileViewModel(private val application: Application) : AndroidViewMo
                         }
 
                         override fun onFailure(message: String?, code: Int) {
-                            if (code == HTTP_UNAUTHORIZED){
+                            if (code == HTTP_UNAUTHORIZED) {
                                 _isLoadingUpdate.value = null
-                            }else{
+                            } else {
                                 _isLoadingUpdate.value = false
                             }
 

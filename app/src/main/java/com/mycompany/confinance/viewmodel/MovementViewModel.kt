@@ -19,8 +19,6 @@ class MovementViewModel(application: Application) : AndroidViewModel(application
     val list: LiveData<List<MovementModel>> = _list
     private var _isLoadingDelete = MutableLiveData<Boolean>()
     val isLoadingDelete: LiveData<Boolean> = _isLoadingDelete
-    private var _isLoadingGetMovement = MutableLiveData<Boolean>()
-    val isLoadingGetMovement: LiveData<Boolean> = _isLoadingGetMovement
     fun getRevenue(month: Int, year: Int) {
         repository.getRevenue(month = month, year = year, listener = object : ApiListener<List<MovementModel>> {
             override fun onSuccess(result: List<MovementModel>) {
@@ -78,21 +76,6 @@ class MovementViewModel(application: Application) : AndroidViewModel(application
         })
     }
 
-//    fun getMovementId(id: Long) {
-//        repository.getMovementById(idMovement = id, object :ApiListener<MovementModel>{
-//            override fun onSuccess(result: MovementModel) {
-//                if (result.id != null){
-//                    _isLoadingGetMovement.value = true
-//                }else{
-//                    _isLoadingGetMovement.value = false
-//                }
-//            }
-//
-//            override fun onFailure(message: String, code: Int) {
-//                _isLoadingGetMovement.value = false
-//            }
-//
-//        })
-//    }
+
 
 }

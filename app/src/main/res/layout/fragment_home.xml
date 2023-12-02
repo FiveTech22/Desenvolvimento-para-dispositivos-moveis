@@ -106,10 +106,9 @@
                 android:id="@+id/shimmer_layout_text_totals"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/text_total"
+                android:layout_alignTop="@id/text_revenue"
                 android:layout_alignStart="@id/text_total"
                 android:layout_marginStart="-8dp"
-                android:layout_marginTop="19dp"
                 app:shimmer_color="@color/Light_Gray"
             >
 
@@ -132,7 +131,7 @@
                     android:text="@string/total_default"
                     android:textColor="@color/red"
                     android:layout_below="@id/text_total_revenue"
-                    android:layout_marginTop="44dp"
+                    android:layout_marginTop="62dp"
                     android:layout_alignStart="@id/text_total"
                 />
             </xyz.peridy.shimmerlayout.ShimmerLayout>

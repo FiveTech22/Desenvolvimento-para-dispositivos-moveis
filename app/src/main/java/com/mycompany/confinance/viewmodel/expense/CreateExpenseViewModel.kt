@@ -1,4 +1,4 @@
-package com.mycompany.confinance.viewmodel
+package com.mycompany.confinance.viewmodel.expense
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -25,17 +25,19 @@ class CreateExpenseViewModel(private val application: Application) : AndroidView
         repetitions: String,
         photo: Int?
     ) {
-        if (value != null || description != "" || data != "Data" || photo != null) {
+        if (value == null || description == "" || data == "Data" || photo == null) {
+            _isLoading.value = null
+        } else {
             if (!fixedIncome) {
                 repository.createMovement(
                     context = application,
                     codeType = 2,
-                    value = value!!,
+                    value = value,
                     description = description,
                     fixedIncome = null,
                     data = data,
                     repetitions = repetitions,
-                    photo = photo!!,
+                    photo = photo,
                     listener = object : ApiListener<ResponseModel> {
                         override fun onSuccess(result: ResponseModel) {
                             if (result.status == HttpURLConnection.HTTP_CREATED) {
@@ -55,12 +57,12 @@ class CreateExpenseViewModel(private val application: Application) : AndroidView
                 repository.createMovement(
                     context = application,
                     codeType = 2,
-                    value = value!!,
+                    value = value,
                     description = description,
                     data = data,
                     fixedIncome = fixedIncome,
                     repetitions = null,
-                    photo = photo!!,
+                    photo = photo,
                     listener = object : ApiListener<ResponseModel> {
                         override fun onSuccess(result: ResponseModel) {
                             if (result.status == HttpURLConnection.HTTP_CREATED) {
@@ -77,16 +79,15 @@ class CreateExpenseViewModel(private val application: Application) : AndroidView
                     }
                 )
             }
-        } else {
-            _isLoading.value = null
         }
     }
 
 
     fun updateExpense(updateExpense: MovementUpdate, expense: MovementModel) {
 
-        if (updateExpense.value != null || updateExpense.description != "" || updateExpense.date != "Data" || updateExpense.photo != null) {
-
+        if (updateExpense.value == null || updateExpense.description == "" || updateExpense.date == "Data" || updateExpense.photo == null) {
+            _isLoading.value = null
+        }else{
             val updatedValue = updateExpense.value.takeIf { it != expense.value }
             val updatedDescription = updateExpense.description.takeIf { it != expense.description }
             val updatedPhoto = updateExpense.photo.takeIf { it != expense.photo }
@@ -122,8 +123,6 @@ class CreateExpenseViewModel(private val application: Application) : AndroidView
 
                 }
             )
-        }else{
-            _isLoading.value = null
         }
         }
 

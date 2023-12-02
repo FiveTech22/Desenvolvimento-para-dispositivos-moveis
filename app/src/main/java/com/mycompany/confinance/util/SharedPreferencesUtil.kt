@@ -22,4 +22,16 @@ object SharedPreferencesUtil {
         editor.putBoolean("http_connected", isConnected)
         editor.apply()
     }
+
+    fun saveImg(context: Context,img:Int){
+        val sharedPreferences = context.getSharedPreferences("MyP", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putInt("img",img)
+        editor.apply()
+    }
+
+    fun getImg(context: Context): Int {
+        val sharedPreferences = context.getSharedPreferences("MyP", Context.MODE_PRIVATE)
+        return sharedPreferences.getInt("img", 0)
+    }
 }

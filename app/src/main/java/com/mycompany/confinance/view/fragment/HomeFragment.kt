@@ -51,7 +51,7 @@ class HomeFragment : Fragment() {
 
     private fun formatarNumero(numero: Double): String {
         val formato = DecimalFormat("#,##0.00", DecimalFormatSymbols.getInstance(Locale("pt", "BR")))
-        return "R$" + formato.format(numero)
+        return "R$ " + formato.format(numero)
     }
 
     private fun observe() {

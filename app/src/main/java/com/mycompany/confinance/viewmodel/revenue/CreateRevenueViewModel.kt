@@ -1,4 +1,4 @@
-package com.mycompany.confinance.viewmodel
+package com.mycompany.confinance.viewmodel.revenue
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -25,12 +25,14 @@ class CreateRevenueViewModel(private val application: Application) : AndroidView
         repetitions: String?,
         photo: Int?
     ) {
-        if (value != null || description != "" || data != "Data" && photo != null) {
+        if (value == null || description == "" || data == "" || photo == null) {
+            _isLoading.value = null
+        } else {
             if (fixedIncome == false) {
                 repository.createMovement(
                     context = application,
                     codeType = 1,
-                    value = value!!,
+                    value = value,
                     description = description,
                     fixedIncome = null,
                     data = data!!,
@@ -77,15 +79,15 @@ class CreateRevenueViewModel(private val application: Application) : AndroidView
                     }
                 )
             }
-        } else {
-            _isLoading.value = null
         }
     }
 
 
     fun updateRevenue(updateRevenue: MovementUpdate, revenue: MovementModel) {
 
-        if (updateRevenue.value != null || updateRevenue.description != "" || updateRevenue.date != "Data" || updateRevenue.photo != null) {
+        if (updateRevenue.value == null || updateRevenue.description == "" || updateRevenue.date == "" || updateRevenue.photo == null) {
+            _isLoading.value = null
+        }else{
             val updatedValue = updateRevenue.value.takeIf { it != revenue.value }
             val updatedDescription = updateRevenue.description.takeIf { it != revenue.description }
             val updatedPhoto = updateRevenue.photo.takeIf { it != revenue.photo }
@@ -121,8 +123,6 @@ class CreateRevenueViewModel(private val application: Application) : AndroidView
 
                 }
             )
-        }else{
-            _isLoading.value = null
         }
 
     }
