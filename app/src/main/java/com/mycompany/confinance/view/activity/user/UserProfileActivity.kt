@@ -1,5 +1,6 @@
 package com.mycompany.confinance.view.activity.user
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -232,10 +233,10 @@ class UserProfileActivity : AppCompatActivity() {
 
     }
 
+    @SuppressLint("SuspiciousIndentation")
     private fun imgIcone() {
         val img = SharedPreferencesUtil.getImg(context = this)
 
-        if (img != user.photo) {
             when (img) {
                 1 -> {
                     photo = 1
@@ -323,7 +324,6 @@ class UserProfileActivity : AppCompatActivity() {
                     photo = 20
                     binding.imagePerfil.setImageResource(R.drawable.perfil_15)
                 }
-            }
         }
     }
 

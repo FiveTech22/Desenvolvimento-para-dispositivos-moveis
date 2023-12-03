@@ -32,6 +32,6 @@ object SharedPreferencesUtil {
 
     fun getImg(context: Context): Int {
         val sharedPreferences = context.getSharedPreferences("MyP", Context.MODE_PRIVATE)
-        return sharedPreferences.getInt("img", 0)
+        return sharedPreferences.getInt("img", 1)
     }
 }

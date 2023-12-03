@@ -54,20 +54,24 @@ class UserProfileViewModel(private val application: Application) : AndroidViewMo
         val name = name.takeIf { it != user.name }
         val photo = photo.takeIf { it != user.photo }
 
-        repository.updateForNameOrEmailOrPhoto(
-            name = name,
-            email = email,
-            photo = photo,
-            listener = object : ApiListener<ResponseModel> {
-                override fun onSuccess(result: ResponseModel) {
-                    _isLoadingUpdate.value = result.status == HTTP_OK
-                }
+        if(email == null && name == null && photo == null){
+            _isLoadingUpdate.value = null
+        }else{
+            repository.updateForNameOrEmailOrPhoto(
+                name = name,
+                email = email,
+                photo = photo,
+                listener = object : ApiListener<ResponseModel> {
+                    override fun onSuccess(result: ResponseModel) {
+                        _isLoadingUpdate.value = result.status == HTTP_OK
+                    }
 
-                override fun onFailure(message: String?, code: Int) {
-                    _isLoadingUpdate.value = false
-                }
+                    override fun onFailure(message: String?, code: Int) {
+                        _isLoadingUpdate.value = false
+                    }
 
-            })
+                })
+        }
     }
 
     fun uptadePassword(password: String, newPassword: String, newPasswordAgain: String) {

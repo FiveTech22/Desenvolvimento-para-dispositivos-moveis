@@ -172,11 +172,92 @@ class MainActivity : AppCompatActivity() {
     private fun handleClick() {
         val navView: NavigationView = binding.navView
         val imageViewHeader = navView.getHeaderView(0).findViewById<ImageView>(R.id.imageView)
+        val img = SharedPreferencesUtil.getImg(context = applicationContext)
+        if (img != 1) {
+            when (img) {
+                2 -> {
+                    imageViewHeader.setImageResource(R.drawable.perfil_4)
+                }
 
-        imageViewHeader.setOnClickListener {
-            startActivity(Intent(this, UserProfileActivity::class.java))
+                3 -> {
+                    imageViewHeader.setImageResource(R.drawable.perfil_3)
+                }
+
+                4 -> {
+                    imageViewHeader.setImageResource(R.drawable.perfil_2)
+                }
+
+                5 -> {
+                    imageViewHeader.setImageResource(R.drawable.perfil_1)
+                }
+
+                6 -> {
+                    imageViewHeader.setImageResource(R.drawable.perfil_h1)
+                }
+
+                7 -> {
+                    imageViewHeader.setImageResource(R.drawable.perfil_m1)
+                }
+
+                8 -> {
+                    imageViewHeader.setImageResource(R.drawable.perfil_m2)
+                }
+
+                9 -> {
+                    imageViewHeader.setImageResource(R.drawable.perfil_h2)
+                }
+
+                10 -> {
+                    imageViewHeader.setImageResource(R.drawable.perfil_h3)
+                }
+
+                11 -> {
+                    imageViewHeader.setImageResource(R.drawable.perfil_6)
+                }
+
+                12 -> {
+                    imageViewHeader.setImageResource(R.drawable.perfil_7)
+                }
+
+                13 -> {
+                    imageViewHeader.setImageResource(R.drawable.perfil_8)
+                }
+
+                14 -> {
+                    imageViewHeader.setImageResource(R.drawable.perfil_9)
+                }
+
+                15 -> {
+                    imageViewHeader.setImageResource(R.drawable.perfil_10)
+                }
+
+                16 -> {
+
+                    imageViewHeader.setImageResource(R.drawable.perfil_11)
+                }
+
+                17 -> {
+                    imageViewHeader.setImageResource(R.drawable.perfil_12)
+                }
+
+                18 -> {
+                    imageViewHeader.setImageResource(R.drawable.perfil_13)
+                }
+
+                19 -> {
+                    imageViewHeader.setImageResource(R.drawable.perfil_14)
+                }
+
+                20 -> {
+                    imageViewHeader.setImageResource(R.drawable.perfil_15)
+                }
+            }
+
+            imageViewHeader.setOnClickListener {
+                startActivity(Intent(this, UserProfileActivity::class.java))
+            }
+
         }
-
     }
 
     private fun formatarNumero(numero: Double): String {
